@@ -506,7 +506,7 @@ label:          Dim str = ""
         End Try
 
     End Function
-    Public Function GetDatatable_PMT(ByVal StrFilePath As String, ByRef dtinput As DataTable) As DataTable
+    Public Function GetDatatable_PMT(ByVal StrFilePath As String, ByRef dtinput As DataTable, ByRef DtUnSucInput As DataTable) As DataTable
 
         Dim strTemp() As String
         Dim TmpLineStr As String
@@ -514,13 +514,49 @@ label:          Dim str = ""
         Dim strReader As New StreamReader(StrFilePath)
         Try
             'AddColumnToTable(DtInput, columnLength)
-            Dim cnt = 0
+            Dim cnt = 0, linecnt = 1
             Do While strReader.EndOfStream = False
                 TmpLineStr = strReader.ReadLine
                 'strTemp = GetInArrayByComma(TmpLineStr) 'TmpLineStr.Split("@")
                 'strTemp = TmpLineStr.Split(",")
                 If Not TmpLineStr.ToString() = "~" And Not TmpLineStr.ToString() = "~H" And Not TmpLineStr.ToString() = "~D" Then
                     dtinput.Rows(dtinput.Rows.Count - 1)(cnt) = TmpLineStr
+                    If (cnt = 3 Or cnt = 4 Or cnt = 5 Or cnt = 6 Or cnt = 7 Or cnt = 8 Or cnt = 10) Then
+                        If cnt = 3 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Paying company code is blank at Line No" & linecnt
+                        ElseIf cnt = 4 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Document Number of the Payment Document is blank at Line No" & linecnt
+                        ElseIf cnt = 5 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Amount is blank at Line No" & linecnt
+                        ElseIf cnt = 6 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Currency key is blank at Line No" & linecnt
+                        ElseIf cnt = 7 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Payment Method for This Payment is blank at Line No" & linecnt
+                        ElseIf cnt = 8 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Account number of vendor or creditor is blank at Line No" & linecnt
+                        ElseIf cnt = 10 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Name of the payee is blank at Line No" & linecnt
+                        ElseIf cnt = 16 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Short key for a house bank is blank at Line No" & linecnt
+                        ElseIf cnt = 17 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "ID for account details is blank at Line No" & linecnt
+                        ElseIf cnt = 18 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Posting Date is blank at Line No" & linecnt
+                        ElseIf cnt = 23 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Beneficiary Account Number is blank at Line No" & linecnt
+                        End If
+                    End If
                     cnt = cnt + 1
                 ElseIf TmpLineStr.ToString() = "~" Or TmpLineStr.ToString() = "~H" Then
                     dtinput.Rows.Add()
@@ -528,6 +564,7 @@ label:          Dim str = ""
                     dtinput.Rows(dtinput.Rows.Count - 1)(cnt) = TmpLineStr
                     cnt = 1
                 End If
+                linecnt = linecnt + 1
             Loop
             GetDatatable_PMT = dtinput.Copy
         Catch ex As Exception
@@ -545,7 +582,7 @@ label:          Dim str = ""
         End Try
 
     End Function
-    Public Function GetDatatable_ADV(ByVal StrFilePath As String, ByRef dtinput As DataTable) As DataTable
+    Public Function GetDatatable_ADV(ByVal StrFilePath As String, ByRef dtinput As DataTable, ByRef DtUnSucInput As DataTable) As DataTable
 
         Dim strTemp() As String
         Dim TmpLineStr As String
@@ -553,7 +590,7 @@ label:          Dim str = ""
         Dim strReader As New StreamReader(StrFilePath)
         Try
             'AddColumnToTable(DtInput, columnLength)
-            Dim cnt = 0
+            Dim cnt = 0, linecnt = 1
             Dim ClientCode = ""
             Dim PaymentDocumentNo = ""
             Dim DocumentDate = ""
@@ -563,6 +600,18 @@ label:          Dim str = ""
                 'strTemp = GetInArrayByComma(TmpLineStr) 'TmpLineStr.Split("@")
                 'strTemp = TmpLineStr.Split(",")
                 If TmpLineStr.ToString() = "~H" Then
+                    If (cnt = 0 Or cnt = 1 Or cnt = 2) Then
+                        If cnt = 0 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Paying company code is blank at Line No" & linecnt
+                        ElseIf cnt = 1 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Document Number of the Payment Document is blank at Line No" & linecnt
+                        ElseIf cnt = 2 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Posting Date is blank at Line No" & linecnt
+                        End If
+                    End If
                     dtinput.Rows.Add()
                     isaddtionalAdv = 0
                     ClientCode = ""
@@ -571,6 +620,24 @@ label:          Dim str = ""
                     cnt = 0
                     isFirstD = 0
                 ElseIf TmpLineStr.ToString() = "~D" Then
+                    If (cnt = 3 Or cnt = 4 Or cnt = 5 Or cnt = 7 Or cnt = 8) Then
+                        If cnt = 3 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "~D is blank at Line No" & linecnt
+                        ElseIf cnt = 4 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Accounting document number is blank at Line No" & linecnt
+                        ElseIf cnt = 5 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Posting date in the document is blank at Line No" & linecnt
+                        ElseIf cnt = 7 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Document date in document is blank at Line No" & linecnt
+                        ElseIf cnt = 8 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Amount is blank at Line No" & linecnt
+                        End If
+                    End If
                     If (isFirstD = 1) Then
                         cnt = 3
                         dtinput.Rows(dtinput.Rows.Count - 1)(cnt) = TmpLineStr
@@ -584,6 +651,24 @@ label:          Dim str = ""
                         isFirstD = 1
                     End If
                 Else
+                    If (cnt = 3 Or cnt = 4 Or cnt = 5 Or cnt = 7 Or cnt = 8) Then
+                        If cnt = 3 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "~D is blank at Line No" & linecnt
+                        ElseIf cnt = 4 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Accounting document number is blank at Line No" & linecnt
+                        ElseIf cnt = 5 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Posting date in the document is blank at Line No" & linecnt
+                        ElseIf cnt = 7 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Document date in document is blank at Line No" & linecnt
+                        ElseIf cnt = 8 And TmpLineStr.ToString().Trim = "" Then
+                            DtUnSucInput.Rows.Add()
+                            DtUnSucInput.Rows(0)("Reason") = "Amount is blank at Line No" & linecnt
+                        End If
+                    End If
                     dtinput.Rows(dtinput.Rows.Count - 1)(cnt) = TmpLineStr
                     If (cnt = 0) Then
                         ClientCode = TmpLineStr
@@ -600,6 +685,7 @@ label:          Dim str = ""
                     End If
                     cnt = cnt + 1
                 End If
+                linecnt = linecnt + 1
             Loop
             GetDatatable_ADV = dtinput.Copy
         Catch ex As Exception
@@ -617,6 +703,7 @@ label:          Dim str = ""
             dtinput = Nothing
 
         End Try
+
 
     End Function
     Public Function MyGetDatatable_Text(ByVal StrFilePath As String, ByVal Parameter As String) As DataTable

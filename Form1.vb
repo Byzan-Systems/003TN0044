@@ -50,7 +50,7 @@ Public Class Form1
                 Call objGetSetINI.SetINISettings("General", "Converter Caption", "Reliance - CONVERTER", strSettingsFilePath)
                 Call objGetSetINI.SetINISettings("General", "RemoveRows", "1", strSettingsFilePath)
                 'Call objGetSetINI.SetINISettings("General", "Process Output File Ignoring Invalid Transactions", "N", strSettingsFilePath)
-                'Call objGetSetINI.SetINISettings("General", "File Counter", "0", strSettingsFilePath)
+                Call objGetSetINI.SetINISettings("General", "File Counter", "0", strSettingsFilePath)
 
                 Call objGetSetINI.SetINISettings("General", "==", "==========================================", strSettingsFilePath) 'Separator
                 '-Encryption Section-
@@ -113,49 +113,106 @@ Public Class Form1
             Else
                 objBaseClass.LogEntry("", False)
                 objBaseClass.LogEntry("Process Started for INPUT Files")
-                Dim cnt = 0
-                Dim matchFname = ""
-                Dim filecount = objfolderAll.GetFiles("*").Count
-                If (filecount > 1) Then
+
+
+                While (Not objfolderAll.GetFiles("*").Count = 0)
+                    Dim cnt = 0
                     For Each file1 As FileInfo In objfolderAll.GetFiles("*")
+                        Dim files = objfolderAll.GetFiles("*")
                         objBaseClass.isCompleteFileAvailable(file1.FullName)
                         Dim str = Mid(file1.FullName, 1, file1.FullName.Length - 4).ToString().ToUpper()
 
-                        If Mid(file1.FullName, file1.FullName.Length - 3, 4).ToString().ToUpper() = ".PMT" Or Mid(file1.FullName, file1.FullName.Length - 3, 4).ToString().ToUpper() = ".ADV" Then
-
-                            If (cnt <= 0) Then
-                                cnt = cnt + 1
-                                matchFname = str
-                            Else
-                                If (matchFname = str) Then
-                                    cnt = cnt + 1
-                                End If
-                            End If
-
+                        If File.Exists(str & ".PMT") Then
+                            objBaseClass.LogEntry("", False)
+                            objBaseClass.LogEntry("INPUT File [ " & file1.Name & " ] -- Started At -- " & Format(Date.Now, "hh:mm:ss"), False)
+                            Process_Each(str & ".pmt", str & ".adv")
+                            cnt = 3
+                        Else
+                            objBaseClass.LogEntry("Invalid File Format", False)
+                            objBaseClass.FileMove(file1.FullName, strArchivedFolderUnSuc & "\" & file1.Name)
+                            objBaseClass.LogEntry("Process Terminated", False)
+                            objBaseClass.LogEntry("-------------------------------------------------------------------------------------", False)
                         End If
-                        If cnt >= 2 Then
-                            If Mid(file1.FullName, file1.FullName.Length - 3, 4).ToString().ToUpper() = ".PMT" Or Mid(file1.FullName, file1.FullName.Length - 3, 4).ToString().ToUpper() = ".ADV" Then
-                                objBaseClass.LogEntry("", False)
-                                objBaseClass.LogEntry("INPUT File [ " & file1.Name & " ] -- Started At -- " & Format(Date.Now, "hh:mm:ss"), False)
-                                If File.Exists(str & ".pmt") And File.Exists(str & ".adv") Then
-                                    Process_Each(str & ".pmt", str & ".adv")
-                                    cnt = 3
-                                Else
-                                    objBaseClass.LogEntry("Invalid File Format", False)
-                                End If
-                            End If
-                        End If
+
                         objfolderAll.Refresh()
+                        Exit For
                     Next
-                    If cnt = 3 Then
-                    Else
-                        objBaseClass.LogEntry("Payment or advice  or both files are missing.", False)
-                    End If
+                    'If cnt = 3 Then
+                    'Else
+                    '    objBaseClass.LogEntry("Payment or advice  or both files are missing.", False)
+                    'End If
                     cnt = 0
-                    matchFname = ""
-                Else
-                    objBaseClass.LogEntry("Payment or advice  or both files are missing.", False)
-                End If
+                End While
+
+
+                'If (filecount > 1) Then
+                '    While (Not objfolderAll.GetFiles("*").Count = 0)
+                '        Dim cnt = 0
+                '        Dim matchFname = ""
+
+                '        For Each file1 As FileInfo In objfolderAll.GetFiles("*")
+                '            Dim files = objfolderAll.GetFiles("*")
+                '            objBaseClass.isCompleteFileAvailable(file1.FullName)
+                '            Dim str = Mid(file1.FullName, 1, file1.FullName.Length - 4).ToString().ToUpper()
+
+                '            If Mid(file1.FullName, file1.FullName.Length - 3, 4).ToString().ToUpper() = ".PMT" Or Mid(file1.FullName, file1.FullName.Length - 3, 4).ToString().ToUpper() = ".ADV" Then
+
+                '                If (cnt <= 0) Then
+                '                    cnt = cnt + 1
+                '                    matchFname = str
+                '                Else
+                '                    If (matchFname = str) Then
+                '                        cnt = cnt + 1
+                '                    End If
+                '                End If
+
+                '            End If
+                '            If cnt >= 1 Then
+                '                If Mid(file1.FullName, file1.FullName.Length - 3, 4).ToString().ToUpper() = ".PMT" Or Mid(file1.FullName, file1.FullName.Length - 3, 4).ToString().ToUpper() = ".ADV" Then
+                '                    objBaseClass.LogEntry("", False)
+                '                    objBaseClass.LogEntry("INPUT File [ " & file1.Name & " ] -- Started At -- " & Format(Date.Now, "hh:mm:ss"), False)
+                '                    If File.Exists(str & ".pmt") And File.Exists(str & ".adv") Then
+                '                        Process_Each(str & ".pmt", str & ".adv")
+                '                        cnt = 3
+                '                    Else
+                '                        objBaseClass.LogEntry("Invalid File Format", False)
+                '                        If File.Exists(str & ".pmt") Then
+                '                            Dim pmtname = (str & ".pmt").Substring((str & ".pmt").LastIndexOf("\"))
+                '                            pmtname = pmtname.Replace("\", "")
+                '                            objBaseClass.FileMove(gstrInputFolder & "\" & pmtname, strArchivedFolderUnSuc & "\" & pmtname)
+                '                        End If
+                '                        If File.Exists(str & ".adv") Then
+                '                            Dim advname = (str & ".adv").Substring((str & ".adv").LastIndexOf("\"))
+                '                            advname = advname.Replace("\", "")
+                '                            objBaseClass.FileMove(gstrInputFolder & "\" & advname, strArchivedFolderUnSuc & "\" & advname)
+                '                        End If
+
+                '                    End If
+                '                End If
+                '            End If
+                '            objfolderAll.Refresh()
+                '            Exit For
+                '        Next
+
+
+                '        If cnt = 3 Then
+                '    Else
+                '        objBaseClass.LogEntry("Payment or advice  or both files are missing.", False)
+                '    End If
+                '    cnt = 0
+                '        matchFname = ""
+                '    End While
+                'Else
+                '    objBaseClass.LogEntry("Payment or advice  or both files are missing.", False)
+                '    Dim filesfound = objfolderAll.GetFiles("*")
+                '    Dim strfilename = filesfound(0).ToString()
+                '    If File.Exists(gstrInputFolder & "\" & strfilename) Then
+                '        objBaseClass.FileMove(gstrInputFolder & "\" & strfilename, strArchivedFolderUnSuc & "\" & strfilename)
+                '    End If
+                '    If File.Exists(gstrInputFolder & "\" & strfilename) Then
+                '        objBaseClass.FileMove(gstrInputFolder & "\" & strfilename, strArchivedFolderUnSuc & "\" & strfilename)
+                '    End If
+                'End If
             End If
 
             ' For Response 
@@ -168,12 +225,13 @@ Public Class Form1
                 objfolderAll = Nothing
             Else
                 objBaseClass.LogEntry("", False)
-                objBaseClass.LogEntry("Process Started for RESPONSE Files")
+
 
                 For Each objFileOne As FileInfo In objfolderAll.GetFiles()
                     objBaseClass.isCompleteFileAvailable(objFileOne.FullName)
                     If Mid(objFileOne.FullName, objFileOne.FullName.Length - 3, 4).ToString().ToUpper() = ".xls".Trim().ToUpper Or Mid(objFileOne.FullName, objFileOne.FullName.Length - 4, 5).ToString().ToUpper() = ".XLS".ToUpper() Then
                         objBaseClass.LogEntry("", False)
+                        objBaseClass.LogEntry("Process Started for RESPONSE Files")
                         objBaseClass.LogEntry("RESPONSE File [ " & objFileOne.Name & " ] -- Started At -- " & Format(Date.Now, "hh:mm:ss"), False)
 
                         Response_File(objFileOne.FullName)
@@ -217,35 +275,46 @@ Public Class Form1
                 If (objFileValidate.DtInput_PMT.Rows.Count > 0 And objFileValidate.DtUnSucInput.Rows.Count = 0) Then
                     objBaseClass.LogEntry("Input File Validated Successfully", False)
                     If objFileValidate.DtInput_PMT.Rows.Count > 0 Then
-                        objBaseClass.LogEntry("Output File Generation Process Started", False)
-                        Dim gstroutputFileName = objFileValidate.DtMasterHouseBank.Rows(0)("HouseBankID").ToString & objFileValidate.DtMasterHouseBank.Rows(0)("AccountID").ToString & System.DateTime.Now.ToString("yyyyMMddHHmmss")
-
-                        If GenerateOutPutFile(objFileValidate.DtInput_PMT, objFileValidate.DtInput_ADV, gstroutputFileName) = False Then       ''Generating Output
-                            TrnProcSuc = False
-                            objBaseClass.LogEntry("Output File Generation process failed due to Error", True)
-                            objBaseClass.FileMove(gstrInputFolder & "\" & gstrInputFilePMT, strArchivedFolderUnSuc & "\" & gstrInputFilePMT)
-                            objBaseClass.FileMove(gstrInputFolder & "\" & gstrInputFileADV, strArchivedFolderUnSuc & "\" & gstrInputFileADV)
-                            objBaseClass.LogEntry("Input file :" + Path.GetFileName(strInputFileNamePMT) + " and " + gstrInputFileADV + " Is Moved to " + strArchivedFolderUnSuc)
+                        If (objFileValidate.DtMasterHouseBank.Rows.Count = 0) Then
+                            objBaseClass.LogEntry("Master is not maintainted for HouseBankID and AccountID", True)
                         Else
-                            objBaseClass.FileMove(gstrInputFolder & "\" & gstrInputFilePMT, strArchivedFolderSuc & "\" & gstrInputFilePMT)
-                            objBaseClass.FileMove(gstrInputFolder & "\" & gstrInputFileADV, strArchivedFolderSuc & "\" & gstrInputFileADV)
-                            objBaseClass.LogEntry("Input file [" + Path.GetFileName(strInputFileNamePMT) + " and " + gstrInputFileADV + "] Is Moved to " + strArchivedFolderSuc)
-                            objBaseClass.LogEntry("Output File " & strOutputFolderPath & "\" & gstroutputFileName & ".txt" & " is Generated Successfully", False)
-
-                            If strEncrypt.ToUpper = "Y" Then
-                                objBaseClass.LogEntry("Performing Output File Encryption", False)
-                                File.Copy(strOutputFolderPath & "\" & gstroutputFileName & ".txt", strPICKDIRpath & "\" & gstroutputFileName & ".txt")
-                                objBaseClass.ExecuteEncrytion()
-                                Threading.Thread.Sleep(2000)
-                                objBaseClass.FileMove(strDROPDIRPath & "\" & gstroutputFileName & ".txt" & ".enc", strEncryptFolderPath & "\" & gstroutputFileName & "_enc" & ".txt")
-                                objBaseClass.LogEntry("Encrypted File " & strEncryptFolderPath & "\" & gstroutputFileName & "_enc" & ".txt" & "  performed Successfully", False)
-                            Else
-                                'objBaseClass.FileMove(strTempFolderPath & "\" & gstrOutputFile, strOutputFolderPath & "\" & gstrOutputFile & ".enc")
+                            objBaseClass.LogEntry("Output File Generation Process Started", False)
+                            FileCounter = objBaseClass.GetINISettings("General", "File Counter", My.Application.Info.DirectoryPath & "\settings.ini")
+                            FileCounter += 1
+                            If Len(FileCounter) < 3 Then
+                                FileCounter = FileCounter.PadLeft(4, "0").Trim()
+                                FileCounter = FileCounter.Substring(FileCounter.Length - 3, 3)
                             End If
+                            Dim gstroutputFileName = objFileValidate.DtMasterHouseBank.Rows(0)("CustCodes").ToString & "_" & objFileValidate.DtMasterHouseBank.Rows(0)("FCNAME").ToString & "_" & System.DateTime.Now.ToString("ddMMyyyy") & "_" & FileCounter
+                            ' Dim gstroutputFileName = objFileValidate.DtMasterHouseBank.Rows(0)("HouseBankID").ToString & objFileValidate.DtMasterHouseBank.Rows(0)("AccountID").ToString & System.DateTime.Now.ToString("yyyyMMddHHmmss")
 
-                            TrnProcSuc = True
+                            If GenerateOutPutFile(objFileValidate.DtInput_PMT, objFileValidate.DtInput_ADV, gstroutputFileName, gstrInputFilePMT, objFileValidate.DtMasterHouseBank) = False Then       ''Generating Output
+                                TrnProcSuc = False
+                                objBaseClass.LogEntry("Output File Generation process failed due to Error", True)
+                                objBaseClass.FileMove(gstrInputFolder & "\" & gstrInputFilePMT, strArchivedFolderUnSuc & "\" & gstrInputFilePMT)
+                                objBaseClass.FileMove(gstrInputFolder & "\" & gstrInputFileADV, strArchivedFolderUnSuc & "\" & gstrInputFileADV)
+                                objBaseClass.LogEntry("Input file :" + Path.GetFileName(strInputFileNamePMT) + " and " + gstrInputFileADV + " Is Moved to " + strArchivedFolderUnSuc)
+                            Else
+                                objBaseClass.FileMove(gstrInputFolder & "\" & gstrInputFilePMT, strArchivedFolderSuc & "\" & gstrInputFilePMT)
+                                objBaseClass.FileMove(gstrInputFolder & "\" & gstrInputFileADV, strArchivedFolderSuc & "\" & gstrInputFileADV)
+                                objBaseClass.LogEntry("Input file [" + Path.GetFileName(strInputFileNamePMT) + " and " + gstrInputFileADV + "] Is Moved to " + strArchivedFolderSuc)
+                                objBaseClass.LogEntry("Output File " & strOutputFolderPath & "\" & gstroutputFileName & ".txt" & " is Generated Successfully", False)
+                                Call objBaseClass.SetINISettings("General", "File Counter", Val(FileCounter), My.Application.Info.DirectoryPath & "\settings.ini")
+                                '
+                                If strEncrypt.ToUpper = "Y" Then
+                                    objBaseClass.LogEntry("Performing Output File Encryption", False)
+                                    File.Copy(strOutputFolderPath & "\" & gstroutputFileName & ".txt", strPICKDIRpath & "\" & gstroutputFileName & ".txt")
+                                    objBaseClass.ExecuteEncrytion()
+                                    Threading.Thread.Sleep(2000)
+                                    objBaseClass.FileMove(strDROPDIRPath & "\" & gstroutputFileName & ".txt" & ".enc", strEncryptFolderPath & "\" & gstroutputFileName & ".txt" & ".enc")
+                                    objBaseClass.LogEntry("Encrypted File " & strEncryptFolderPath & "\" & gstroutputFileName & "_enc" & ".txt" & "  performed Successfully", False)
+                                Else
+                                    'objBaseClass.FileMove(strTempFolderPath & "\" & gstrOutputFile, strOutputFolderPath & "\" & gstrOutputFile & ".enc")
+                                End If
+
+                                TrnProcSuc = True
+                            End If
                         End If
-
                     Else
                         TrnProcSuc = False
                         objBaseClass.LogEntry("No Valid Record present in Input File")
@@ -262,11 +331,11 @@ Public Class Form1
                 End If
 
 
-                If objFileValidate.DtUnSucc_Output.Rows.Count > 0 Then
+                If objFileValidate.DtUnSucInput.Rows.Count > 0 Then
                     objBaseClass.LogEntry("Input File contains following Discrepancies")
                     objBaseClass.LogEntry("Writing Instruction failed for Input file ")
 
-                    With objFileValidate.DtUnSucc_Output
+                    With objFileValidate.DtUnSucInput
                         For Each _dtRow As DataRow In .Rows
                             If _dtRow("Reason").ToString().Trim() <> "" Then
                                 objBaseClass.LogEntry(_dtRow("Reason").ToString)
@@ -285,8 +354,12 @@ Public Class Form1
                 End With
                 objBaseClass.LogEntry("Invalid Input File")
                 objBaseClass.FileMove(gstrInputFolder & "\" & gstrInputFilePMT, strArchivedFolderUnSuc & "\" & gstrInputFilePMT)
-                objBaseClass.FileMove(gstrInputFolder & "\" & gstrInputFileADV, strArchivedFolderUnSuc & "\" & gstrInputFileADV)
-                objBaseClass.LogEntry("Input file :" + Path.GetFileName(strInputFileNamePMT) + " and " + Path.GetFileName(strInputFileNameADV) + " Is Moved to " + strArchivedFolderUnSuc)
+                Dim str = "Input file :" + Path.GetFileName(strInputFileNamePMT)
+                If (File.Exists(gstrInputFolder & "\" & gstrInputFileADV)) Then
+                    objBaseClass.FileMove(gstrInputFolder & "\" & gstrInputFileADV, strArchivedFolderUnSuc & "\" & gstrInputFileADV)
+                    str = str + " and " + Path.GetFileName(strInputFileNameADV)
+                End If
+                objBaseClass.LogEntry(str + " Is Moved to " + strArchivedFolderUnSuc)
 
             End If
             If TrnProcSuc <> False Then
@@ -482,9 +555,7 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
-        End
-    End Sub
+
     Private Function GetAllSettings() As Boolean
         Try
             GetAllSettings = False

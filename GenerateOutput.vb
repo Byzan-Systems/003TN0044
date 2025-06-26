@@ -13,7 +13,7 @@ Module GenrateOutput
     Dim objValidationClass As ClsValidation
     Dim SumOfAmount As Double = 0
 
-    Public Function GenerateOutPutFile(ByRef dtOutput_PMT As DataTable, ByRef dtOutput_ADV As DataTable, ByVal strFileName As String) As Boolean
+    Public Function GenerateOutPutFile(ByRef dtOutput_PMT As DataTable, ByRef dtOutput_ADV As DataTable, ByVal strFileName As String, ByVal PMT_Filename As String, ByVal dtMaster As DataTable) As Boolean
         Dim gstrA2Afile As String = String.Empty
         Dim objStrmWriter As StreamWriter
         Dim strMethodCalForEpay As Boolean = False
@@ -22,47 +22,49 @@ Module GenrateOutput
             objBaseClass = New ClsBase(My.Application.Info.DirectoryPath & "\settings.ini")
             objValidationClass = New ClsValidation(strFileName, objBaseClass.gstrIniPath)
             objStrmWriter = New StreamWriter(strOutputFolderPath & "\" & strFileName & ".txt")
-            'FileCounter = objBaseClass.GetINISettings("General", "File Counter", My.Application.Info.DirectoryPath & "\settings.ini")
-            'FileCounter = FileCounter + 1
 
             For i = 0 To dtOutput_PMT.Rows.Count - 1
                 Dim Row_adv = dtOutput_ADV.Select("[Payment Document No.]='" & dtOutput_PMT.Rows(i)("Payment document no.").ToString & "'")
 
                 Dim strOutPutLine = ""
                 'Payment Writing
-                For IntA As Int32 = 0 To dtOutput_PMT.Rows(i).ItemArray.Length - 1
+                For IntA As Int32 = 0 To dtOutput_PMT.Rows(i).ItemArray.Length - 8
                     strOutPutLine = strOutPutLine & (dtOutput_PMT.Rows(i)(IntA).ToString()) & "|"
                 Next
-                For IntA As Int32 = 0 To strOutPutLine.Length - 1
-                    If (strOutPutLine.Substring(strOutPutLine.Length - 2, 2)).Contains("||") Then
-                        strOutPutLine = strOutPutLine.Substring(0, strOutPutLine.Length - 2)
-                    Else
-                        Exit For
-                    End If
-                Next
+                'For IntA As Int32 = 0 To strOutPutLine.Length - 1
+                '    If (strOutPutLine.Substring(strOutPutLine.Length - 2, 2)).Contains("||") Then
+                '        strOutPutLine = strOutPutLine.Substring(0, strOutPutLine.Length - 2)
+                '    Else
+                '        Exit For
+                '    End If
+                'Next
                 If (Not strOutPutLine.Substring(strOutPutLine.Length - 1, 1).Contains("|")) Then
                     strOutPutLine = strOutPutLine & "|"
                 End If
+                strOutPutLine = strOutPutLine & dtMaster.Rows(0)("AccountNumber").ToString() & "|" & dtMaster.Rows(0)("AccountName").ToString() & "|" & PMT_Filename & "|" & dtMaster.Rows(0)("AccountName").ToString() & "|"
                 objStrmWriter.WriteLine(strOutPutLine, strFileName)
-                strOutPutLine = "!"
+                strOutPutLine = "!|"
                 'Advice Writing
+                Dim cnnt = 0
                 For IntA As Int32 = 0 To Row_adv.Length - 1
-                    strOutPutLine = "!"
-                    For IntAA As Int32 = 0 To Row_adv(IntA).ItemArray.Length - 1
+                    strOutPutLine = "!|"
+                    For IntAA As Int32 = 0 To Row_adv(IntA).ItemArray.Length - 6
+                        cnnt = cnnt + 1
                         strOutPutLine = strOutPutLine & (Row_adv(IntA).ItemArray(IntAA).ToString()) & "|"
                     Next
-                    For IntA1 As Int32 = 0 To strOutPutLine.Length - 1
-                        If (strOutPutLine.Substring(strOutPutLine.Length - 2, 2)).Contains("||") Then
-                            strOutPutLine = strOutPutLine.Substring(0, strOutPutLine.Length - 2)
-                        Else
-                            Exit For
-                        End If
-                    Next
-                    If (Not strOutPutLine.Substring(strOutPutLine.Length - 1, 1).Contains("|")) Then
-                        strOutPutLine = strOutPutLine & "|"
-                    Else
-                        Exit For
-                    End If
+                    'For IntA1 As Int32 = 0 To strOutPutLine.Length - 1
+                    '    If (strOutPutLine.Substring(strOutPutLine.Length - 2, 2)).Contains("||") Then
+                    '        strOutPutLine = strOutPutLine.Substring(0, strOutPutLine.Length - 2)
+                    '    Else
+                    '        Exit For
+                    '    End If
+                    'Next
+                    'strOutPutLine = strOutPutLine & "|"
+                    'If (Not strOutPutLine.Substring(strOutPutLine.Length - 1, 1).Contains("|")) Then
+                    '    strOutPutLine = strOutPutLine & "|"
+                    'Else
+                    '    'Exit For
+                    'End If
                     'strFileName = strFileName & System.DateTime.Now.ToString("yyyyMMddHHmmss") & ".txt"
                     objStrmWriter.WriteLine(strOutPutLine, strFileName)
                 Next

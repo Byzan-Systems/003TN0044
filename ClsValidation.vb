@@ -86,40 +86,40 @@ Public Class ClsValidation
             '    DtInput.Columns.Add(New DataColumn(drRBI(1).ToString()))
             'Next
             DtInput.Columns.Add(New DataColumn("First Payt Doc")) ''0
-            DtInput.Columns.Add(New DataColumn("Program Run date")) ''1
-            DtInput.Columns.Add(New DataColumn("Run Identification"))   ''2
-            DtInput.Columns.Add(New DataColumn("Paying Company Code"))    ''3
+            DtInput.Columns.Add(New DataColumn("Run Date")) ''1
+            DtInput.Columns.Add(New DataColumn("Additional identification"))   ''2
+            DtInput.Columns.Add(New DataColumn("Paying company code"))    ''3
             DtInput.Columns.Add(New DataColumn("Payment document no.")) ''4
             DtInput.Columns.Add(New DataColumn("Amount"))  ''5
             DtInput.Columns.Add(New DataColumn("Currency"))   ''6
             DtInput.Columns.Add(New DataColumn("Payment method"))   ''7
             DtInput.Columns.Add(New DataColumn("Vendor Account No/Code"))   ''8
             DtInput.Columns.Add(New DataColumn("Title of the Vendor"))   ''9
-            DtInput.Columns.Add(New DataColumn("Beneficiary name1"))    ''10
-            DtInput.Columns.Add(New DataColumn("Beneficiary name2"))    ''11
-            DtInput.Columns.Add(New DataColumn("Address1"))    ''12
-            DtInput.Columns.Add(New DataColumn("Address2"))    ''13
-            DtInput.Columns.Add(New DataColumn("Address3")) ''14
-            DtInput.Columns.Add(New DataColumn("Address4Dist"))  ''15
-            DtInput.Columns.Add(New DataColumn("Address4City")) ''16
-            DtInput.Columns.Add(New DataColumn("Address5"))   ''17
-            DtInput.Columns.Add(New DataColumn("House Bank"))    ''18
-            DtInput.Columns.Add(New DataColumn("HB Account ID")) ''19
-            DtInput.Columns.Add(New DataColumn("Value date"))   ''20
-            DtInput.Columns.Add(New DataColumn("Instruction Date"))   '21
-            DtInput.Columns.Add(New DataColumn("Mode of Delivery"))   ''22
-            DtInput.Columns.Add(New DataColumn("Cheque No"))   ''23
-            DtInput.Columns.Add(New DataColumn("DD Payable location"))   ''24
-            DtInput.Columns.Add(New DataColumn("Print Location"))   ''25
-            DtInput.Columns.Add(New DataColumn("Beneficiary Account Number"))    ''26
-            DtInput.Columns.Add(New DataColumn("IFSC Code"))    ''27
-            DtInput.Columns.Add(New DataColumn("Beneficiary Bank Name"))    ''28
-            DtInput.Columns.Add(New DataColumn("Beneficiary Account Type"))    ''29
-            DtInput.Columns.Add(New DataColumn("Beneficiary email id"))   ''30
+            DtInput.Columns.Add(New DataColumn("Name of the payee1"))    ''10
+            DtInput.Columns.Add(New DataColumn("Name of the payee2"))    ''11
+            DtInput.Columns.Add(New DataColumn("Name of the payee3"))    ''12
+            DtInput.Columns.Add(New DataColumn("Postal code"))    ''13
+            DtInput.Columns.Add(New DataColumn("City")) ''14
+            DtInput.Columns.Add(New DataColumn("Street/house number"))  ''15
+            DtInput.Columns.Add(New DataColumn("HouseBankID"))    ''16
+            DtInput.Columns.Add(New DataColumn("AccountID")) ''17
+            DtInput.Columns.Add(New DataColumn("Posting Date"))   ''18
+            DtInput.Columns.Add(New DataColumn("System Date"))   '19
+            DtInput.Columns.Add(New DataColumn("Delivery Mode"))   ''20
+            DtInput.Columns.Add(New DataColumn("Cheque No"))   ''21
+            DtInput.Columns.Add(New DataColumn("DD location"))   ''22
+            DtInput.Columns.Add(New DataColumn("Beneficiary Account Number"))    ''23
+            DtInput.Columns.Add(New DataColumn("IFSC Code"))    ''24
+            DtInput.Columns.Add(New DataColumn("Beneficiary Bank Name"))    ''25
+            DtInput.Columns.Add(New DataColumn("Beneficiary email id"))   ''26
+            DtInput.Columns.Add(New DataColumn("Column1"))   ''27
+            DtInput.Columns.Add(New DataColumn("Column2"))    ''28
+            DtInput.Columns.Add(New DataColumn("Column3"))    ''29
+            DtInput.Columns.Add(New DataColumn("Column4"))    ''30
             DtInput.Columns.Add(New DataColumn("TXN_NO", System.Type.GetType("System.Int32")))   '31
             DtInput.Columns.Add(New DataColumn("SUBTXN_NO"))   '32
             'DtInput.Columns.Add(New DataColumn("SUBTXN_NO", System.Type.GetType("System.Int32")))   '33
-            DtInput.Columns.Add(New DataColumn("REASON"))   '34
+            DtInput.Columns.Add(New DataColumn("REASON"))   '33
 
         Catch ex As Exception
             Call ObjBaseClass.Handle_Error(ex, "ClsValidation", Err.Number, "DefineColumnForOutput")
@@ -129,39 +129,25 @@ Public Class ClsValidation
     Private Sub DefineColumnForOutput_ADV(ByRef DtInput As DataTable)
         Try
 
-            DtInput.Columns.Add(New DataColumn("Client Code"))   ''2
-            DtInput.Columns.Add(New DataColumn("Payment Document No."))    ''3
-            DtInput.Columns.Add(New DataColumn("Document Date")) ''4
-            DtInput.Columns.Add(New DataColumn("Detail Record 1(1)"))  ''5
-            DtInput.Columns.Add(New DataColumn("Title 1"))   ''6
-            DtInput.Columns.Add(New DataColumn("Title 2"))   ''7
-            DtInput.Columns.Add(New DataColumn("Title 3"))   ''8
-            DtInput.Columns.Add(New DataColumn("Title 4"))   ''9
-            DtInput.Columns.Add(New DataColumn("Title 5"))    ''10
-            DtInput.Columns.Add(New DataColumn("Title 6"))    ''11
-            DtInput.Columns.Add(New DataColumn("Title 7"))    ''12
-            DtInput.Columns.Add(New DataColumn("Title 8"))    ''13
-            DtInput.Columns.Add(New DataColumn("Text 1")) ''14
-            DtInput.Columns.Add(New DataColumn("Text 2"))  ''15
-            DtInput.Columns.Add(New DataColumn("Text 3")) ''16
-            DtInput.Columns.Add(New DataColumn("Text 4"))   ''17
-            DtInput.Columns.Add(New DataColumn("Text 5"))    ''18
-            DtInput.Columns.Add(New DataColumn("Text 6")) ''19
-            DtInput.Columns.Add(New DataColumn("Text 7"))   ''20
-            DtInput.Columns.Add(New DataColumn("Detail Record 1(2)"))   '21
-            DtInput.Columns.Add(New DataColumn("Title 1(2)"))   ''22
-            DtInput.Columns.Add(New DataColumn("Title 2(2)"))   ''23
-            DtInput.Columns.Add(New DataColumn("Title 3(2)"))   ''24
-            DtInput.Columns.Add(New DataColumn("Title 4(2)"))   ''25
-            DtInput.Columns.Add(New DataColumn("Title 5(2)"))    ''25
-            DtInput.Columns.Add(New DataColumn("Title 6(2)"))    ''26
-            DtInput.Columns.Add(New DataColumn("Title 7(2)"))    ''27
-            DtInput.Columns.Add(New DataColumn("Title 8(2)"))    ''28
-            DtInput.Columns.Add(New DataColumn("Text 11"))   ''29
-            DtInput.Columns.Add(New DataColumn("TXN_NO", System.Type.GetType("System.Int32")))   '32
-            DtInput.Columns.Add(New DataColumn("SUBTXN_NO"))   '33
-            'DtInput.Columns.Add(New DataColumn("SUBTXN_NO", System.Type.GetType("System.Int32")))   '34
-            DtInput.Columns.Add(New DataColumn("REASON"))   '35
+            DtInput.Columns.Add(New DataColumn("Client Code"))   ''1
+            DtInput.Columns.Add(New DataColumn("Payment Document No."))    ''2
+            DtInput.Columns.Add(New DataColumn("Document Date")) ''3
+            DtInput.Columns.Add(New DataColumn("~D"))  ''4
+            DtInput.Columns.Add(New DataColumn("Accounting document number"))   ''5
+            DtInput.Columns.Add(New DataColumn("document Posting date"))   ''6
+            DtInput.Columns.Add(New DataColumn("Reference document number"))   ''7
+            DtInput.Columns.Add(New DataColumn("Document date in document"))   ''8
+            DtInput.Columns.Add(New DataColumn("Amount"))    ''9
+            DtInput.Columns.Add(New DataColumn("Item text"))    ''10
+            DtInput.Columns.Add(New DataColumn("Assignment number"))    ''11
+            DtInput.Columns.Add(New DataColumn("Column1"))    ''12
+            DtInput.Columns.Add(New DataColumn("Column2"))    ''13
+            DtInput.Columns.Add(New DataColumn("Column3"))    ''14
+            DtInput.Columns.Add(New DataColumn("Column4"))    ''15
+            DtInput.Columns.Add(New DataColumn("TXN_NO", System.Type.GetType("System.Int32")))   '16
+            DtInput.Columns.Add(New DataColumn("SUBTXN_NO"))   '17
+            'DtInput.Columns.Add(New DataColumn("SUBTXN_NO", System.Type.GetType("System.Int32")))   '18
+            DtInput.Columns.Add(New DataColumn("REASON"))   '19
 
         Catch ex As Exception
             Call ObjBaseClass.Handle_Error(ex, "ClsValidation", Err.Number, "DefineColumnForOutput")
@@ -219,7 +205,7 @@ Public Class ClsValidation
         End Try
 
     End Sub
-    
+
     Public Function CheckValidateFile(ByVal gstrInputFile As String) As Boolean
 
         Try
@@ -250,7 +236,7 @@ Public Class ClsValidation
 
     End Function
 
-    
+
     Public Function CheckResponseValidateFile(ByVal strResFileName As String) As Boolean
 
         Try
@@ -276,25 +262,35 @@ Public Class ClsValidation
             'RemoveBlankRow(DtValidation)
             Dim strFileName = Path.GetFileNameWithoutExtension(gstrInputFolder & "\" & gstrInputFilePMT)
 
-            DtInput_PMT = ObjBaseClass.GetDatatable_PMT(gstrInputFolder & "\" & strFileName & ".pmt", DtInput_PMT)
-            DtInput_ADV = ObjBaseClass.GetDatatable_ADV(gstrInputFolder & "\" & strFileName & ".adv", DtInput_ADV)
+            DtInput_PMT = ObjBaseClass.GetDatatable_PMT(gstrInputFolder & "\" & strFileName & ".pmt", DtInput_PMT, DtUnSucInput)
+            If File.Exists(gstrInputFolder & "\" & strFileName & ".adv") Then
+                DtInput_ADV = ObjBaseClass.GetDatatable_ADV(gstrInputFolder & "\" & strFileName & ".adv", DtInput_ADV, DtUnSucInput)
+            End If
+
             RemoveBlankRow(DtInput_PMT)
             RemoveBlankRow(DtInput_ADV)
 
-            Dim strquery = " ([HouseBankID] = '" & DtInput_PMT.Rows(0)(11).ToString().Trim & "' or [HouseBankID] = '" & DtInput_PMT.Rows(0)(12).ToString().Trim &
-                 "' or [HouseBankID] = '" & DtInput_PMT.Rows(0)(13).ToString().Trim & "' or [HouseBankID] = '" & DtInput_PMT.Rows(0)(14).ToString().Trim & "' or [HouseBankID] = '" & DtInput_PMT.Rows(0)(15).ToString().Trim &
-                 "' or [HouseBankID] = '" & DtInput_PMT.Rows(0)(16).ToString().Trim & "' or [HouseBankID] = '" & DtInput_PMT.Rows(0)(17).ToString().Trim & "' )  "
+            Dim strquery = " ([HouseBankID] = '" & DtInput_PMT.Rows(0)(16).ToString().Trim & "')  "
+            strquery = strquery & " and ( [AccountID] = '" & CStr(DtInput_PMT.Rows(0)(17)).ToString().Trim & "' ) "
 
-            strquery = strquery & " and ( [AccountID] = '" & DtInput_PMT.Rows(0)(11).ToString().Trim & "' or [AccountID] = '" & DtInput_PMT.Rows(0)(12).ToString().Trim &
-                 "' or [AccountID] = '" & DtInput_PMT.Rows(0)(13).ToString().Trim & "' or [AccountID] = '" & DtInput_PMT.Rows(0)(14).ToString().Trim & "' or [AccountID] = '" & DtInput_PMT.Rows(0)(15).ToString().Trim &
-                 "' or [AccountID] = '" & DtInput_PMT.Rows(0)(16).ToString().Trim & "' or [AccountID] = '" & DtInput_PMT.Rows(0)(17).ToString().Trim & "' ) "
+
+
+            'Dim strquery = " ([HouseBankID] = '" & DtInput_PMT.Rows(0)(11).ToString().Trim & "' or [HouseBankID] = '" & DtInput_PMT.Rows(0)(12).ToString().Trim &
+            '     "' or [HouseBankID] = '" & DtInput_PMT.Rows(0)(13).ToString().Trim & "' or [HouseBankID] = '" & DtInput_PMT.Rows(0)(14).ToString().Trim & "' or [HouseBankID] = '" & DtInput_PMT.Rows(0)(15).ToString().Trim &
+            '     "' or [HouseBankID] = '" & DtInput_PMT.Rows(0)(16).ToString().Trim & "' or [HouseBankID] = '" & DtInput_PMT.Rows(0)(17).ToString().Trim & "' )  "
+
+            'strquery = strquery & " and ( [AccountID] = '" & CStr(DtInput_PMT.Rows(0)(11)).ToString().Trim & "' or [AccountID] = '" & CStr(DtInput_PMT.Rows(0)(12)).ToString().Trim &
+            '     "' or [AccountID] = '" & CStr(DtInput_PMT.Rows(0)(13)).ToString().Trim & "' or [AccountID] = '" & CStr(DtInput_PMT.Rows(0)(14)).ToString().Trim & "' or [AccountID] = '" & CStr(DtInput_PMT.Rows(0)(15)).ToString().Trim &
+            '     "' or [AccountID] = '" & CStr(DtInput_PMT.Rows(0)(16)).ToString().Trim & "' or [AccountID] = '" & CStr(DtInput_PMT.Rows(0)(17)).ToString().Trim & "' ) "
+
             Dim rows = DtMaster.Select(strquery)
-            DtMasterHouseBank = rows.CopyToDataTable()
+
             If (rows.Count = 0) Then
                 Validate = False
                 DtUnSucInput.Rows.Add()
                 DtUnSucInput.Rows(0)("Reason") = "House Bank ID and Account ID is not maintained in Master."
             Else
+                DtMasterHouseBank = rows.CopyToDataTable()
                 Validate = True
             End If
 
@@ -502,7 +498,7 @@ Public Class ClsValidation
         End Try
 
     End Function
-    
+
     Private Function GetValidateDate(ByRef pStrDate As String) As Boolean
 
         Try
@@ -928,7 +924,7 @@ Public Class ClsValidation
         Catch ex As Exception
             blnErrorLog = True  '-Added by Jaiwant dtd 31-03-2011
 
-            Call objBaseClass.Handle_Error(ex, "frmGenericRBI", Err.Number, "Pad_Length")
+            Call ObjBaseClass.Handle_Error(ex, "frmGenericRBI", Err.Number, "Pad_Length")
 
         End Try
     End Function
@@ -985,8 +981,8 @@ Public Class ClsValidation
         End Try
 
     End Function
-    
-    
+
+
 
 
     Function RupeesToWord(ByVal MyNumber)
@@ -1054,14 +1050,14 @@ Public Class ClsValidation
             If Len(MyNumber) = 1 Then
 
 
-                If Trim(Words) = "Thousand" Or _
-                Trim(Words) = "Lakh  Thousand" Or _
-                Trim(Words) = "Lakh" Or _
-                Trim(Words) = "Crore" Or _
-                Trim(Words) = "Crore  Lakh  Thousand" Or _
-                Trim(Words) = "Arab  Crore  Lakh  Thousand" Or _
-                Trim(Words) = "Arab" Or _
-                Trim(Words) = "Kharab  Arab  Crore  Lakh  Thousand" Or _
+                If Trim(Words) = "Thousand" Or
+                Trim(Words) = "Lakh  Thousand" Or
+                Trim(Words) = "Lakh" Or
+                Trim(Words) = "Crore" Or
+                Trim(Words) = "Crore  Lakh  Thousand" Or
+                Trim(Words) = "Arab  Crore  Lakh  Thousand" Or
+                Trim(Words) = "Arab" Or
+                Trim(Words) = "Kharab  Arab  Crore  Lakh  Thousand" Or
                 Trim(Words) = "Kharab" Then
 
                     Words = ConvertDigit(Temp) & place(iCount)
@@ -1075,12 +1071,12 @@ Public Class ClsValidation
                 End If
             Else
 
-                If Trim(Words) = "Thousand" Or _
-                   Trim(Words) = "Lakh  Thousand" Or _
-                   Trim(Words) = "Lakh" Or _
-                   Trim(Words) = "Crore" Or _
-                   Trim(Words) = "Crore  Lakh  Thousand" Or _
-                   Trim(Words) = "Arab  Crore  Lakh  Thousand" Or _
+                If Trim(Words) = "Thousand" Or
+                   Trim(Words) = "Lakh  Thousand" Or
+                   Trim(Words) = "Lakh" Or
+                   Trim(Words) = "Crore" Or
+                   Trim(Words) = "Crore  Lakh  Thousand" Or
+                   Trim(Words) = "Arab  Crore  Lakh  Thousand" Or
                    Trim(Words) = "Arab" Then
 
 
@@ -1093,8 +1089,8 @@ Public Class ClsValidation
                     '=================================================================
                     ' if only Lakh, Crore, Arab, Kharab
 
-                    If Trim(ConvertTens(Temp) & place(iCount)) = "Lakh" Or _
-                       Trim(ConvertTens(Temp) & place(iCount)) = "Crore" Or _
+                    If Trim(ConvertTens(Temp) & place(iCount)) = "Lakh" Or
+                       Trim(ConvertTens(Temp) & place(iCount)) = "Crore" Or
                        Trim(ConvertTens(Temp) & place(iCount)) = "Arab" Then
 
                         Words = Words
