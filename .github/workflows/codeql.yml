@@ -14,7 +14,6 @@ permissions:
 
 jobs:
   analyze:
-    name: Analyze
     runs-on: windows-latest
 
     steps:
@@ -25,13 +24,20 @@ jobs:
       uses: github/codeql-action/init@v3
       with:
         languages: csharp
+        build-mode: manual
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    # 🔴 LET CODEQL RUN THE BUILD
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v3
+    - name: Restore NuGet packages
+      run: nuget restore 003TN0044.sln
+      shell: powershell
+
+    # 🔴 THIS IS THE KEY STEP
+    - name: Build with CodeQL tracing
+      uses: github/codeql-action/trace@v3
+      with:
+        command: msbuild 003TN0044.sln /p:Configuration=Release /p:UseSharedCompilation=false
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
