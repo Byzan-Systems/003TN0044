@@ -284,7 +284,7 @@ Public Class ClsValidation
             '     "' or [AccountID] = '" & CStr(DtInput_PMT.Rows(0)(16)).ToString().Trim & "' or [AccountID] = '" & CStr(DtInput_PMT.Rows(0)(17)).ToString().Trim & "' ) "
 
             Dim rows = DtMaster.Select(strquery)
-
+            'Dim str = DtMaster.Rows(12)(2).ToString() & "acc " & DtMaster.Rows(12)(3).ToString()
             If (rows.Count = 0) Then
                 Validate = False
                 DtUnSucInput.Rows.Add()
