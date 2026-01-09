@@ -136,7 +136,10 @@
     <Content Include="ICICI images.ico" />
   </ItemGroup>
 <ItemGroup>
-  <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
+  <Reference Include="System.Resources.Extensions">
+    <HintPath>$(NuGetPackageRoot)system.resources.extensions\8.0.0\lib\net462\System.Resources.Extensions.dll</HintPath>
+    <Private>true</Private>
+  </Reference>
 </ItemGroup>
 
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
