@@ -1,0 +1,95 @@
+name: BZN_Released_Managment_Workflow-Email
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'Released/**'
+
+jobs:
+  send-code:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 🔹 Checkout FULL git history
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # 🔹 Install dependencies
+      - name: Install 7-Zip & Node.js
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y p7zip-full
+          npm init -y
+          npm install nodemailer
+
+      # 🔹 Find latest file across ALL commits in Released/
+      - name: Find latest released file
+        shell: bash
+        run: |
+          set -e
+
+          MATCHED_FILE="$(git log --name-only --pretty=format: \
+            | grep '^Released/' \
+            | head -n 1)"
+
+          if [ -z "$MATCHED_FILE" ]; then
+            echo "❌ No released files found in commit history"
+            exit 1
+          fi
+
+          FILE_NAME="$(basename "$MATCHED_FILE")"
+          ZIP_NAME="${FILE_NAME}"
+
+          echo "✅ Latest released file: $MATCHED_FILE"
+          echo "$MATCHED_FILE" > matched_files.txt
+
+          {
+            echo "ZIP_NAME=$ZIP_NAME"
+            echo "HAS_MATCHED_FILES=true"
+          } >> "$GITHUB_ENV"
+
+      # 🔹 Zip ONLY the latest file
+      - name: Zip latest file only
+        if: env.HAS_MATCHED_FILES == 'true'
+        shell: bash
+        run: |
+          set -e
+          echo "📦 Creating zip: $ZIP_NAME"
+
+          7z a -tzip "$ZIP_NAME" \
+            -p"${{ secrets.ZIP_PASSWORD }}" \
+            -mem=ZipCrypto \
+            @"matched_files.txt"
+
+      # 🔹 Send email with ZIP attachment
+      - name: Send email via Nodemailer
+        if: env.HAS_MATCHED_FILES == 'true'
+        shell: bash
+        env:
+          SMTP_SERVER: smtp.rediffmailpro.com
+          SMTP_PORT: 465
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          EMAIL_CC: ${{ secrets.EMAIL_CC }}
+          EMAIL_SUBJECT: "Byzan Systems – Latest Release File"
+          EMAIL_BODY: |
+            Hello,
+
+            Attached is the password-protected ZIP file containing the latest release uploaded to the repository.
+
+            Note: This is an automated email. Please do not reply.
+
+            Regards,
+            Byzan Release Management
+          ZIP_FILE: ${{ env.ZIP_NAME }}
+          HELO_HOST: rediffmailpro.com
+          IGNORE_CERT: true
+        run: |
+          set -e
+          node BZN_Send_Email.js
