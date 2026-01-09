@@ -12,6 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -134,5 +135,9 @@
   <ItemGroup>
     <Content Include="ICICI images.ico" />
   </ItemGroup>
+<ItemGroup>
+  <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
+</ItemGroup>
+
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
