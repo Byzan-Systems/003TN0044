@@ -1,0 +1,45 @@
+name: Windows Local Deploy
+
+on:
+  push:
+    branches:
+      - main  # Trigger only on pushes to main branch
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy to Local Folder
+    runs-on: self-hosted  # Runs on your Windows self-hosted runner
+
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+
+    - name: 🛠️ Build Static Site (Optional)
+      run: |
+        echo "Build step goes here if needed"
+        # e.g. npm install && npm run build
+        # Or msbuild 001TN0173.sln /p:Configuration=Release
+
+    - name: 📦 Upload Build Artifact (Optional)
+      if: success()
+      uses: actions/upload-artifact@v4
+      with:
+        name: site-package
+        path: .  # Change this to your build folder if needed
+
+    - name: 🚀 Deploy to Local Folder (Windows)
+      run: |
+        $source = "$env:GITHUB_WORKSPACE"
+        $target = "D:\Deploy\MSILServer"
+
+        Write-Host "Deploying from $source to $target..."
+
+        if (Test-Path $target) {
+            Remove-Item -Recurse -Force -Path "$target\*"
+        } else {
+            New-Item -ItemType Directory -Force -Path $target
+        }
+
+        Copy-Item -Path "$source\*" -Destination $target -Recurse -Force
+        Write-Host "✅ Deployment complete!"
+      shell: pwsh
