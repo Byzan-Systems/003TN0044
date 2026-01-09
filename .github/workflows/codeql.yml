@@ -25,18 +25,13 @@ jobs:
       uses: github/codeql-action/init@v3
       with:
         languages: csharp
-        build-mode: manual   # 🔴 REQUIRED
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Restore NuGet packages
-      run: nuget restore 003TN0044.sln
-      shell: powershell
-
-    - name: Build solution
-      run: msbuild 003TN0044.sln /p:Configuration=Release /p:UseSharedCompilation=false
-      shell: powershell
+    # 🔴 LET CODEQL RUN THE BUILD
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v3
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
